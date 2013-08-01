@@ -1,0 +1,54 @@
+How To Install Perl on a WAMP Server
+
+Step 1:
+
+Download and install WAMP server (WampServer), default installation is c:\wamp. Installing WampServer is not in the scope of this, “how to”. You can read my article on WAMP vs. IIS for a better understanding of WAMP.
+
+Step 2:
+
+Download and install Active Perl from http://www.activestate.com/activeperl/downloads/ ; based on this tutorial, download the Windows Installer (MSI). Run the installer;
+Click Next on the first screen, “Using ActivePerl at work?”. 
+Read and accept license agreement, hit next.
+Custom setup screen, choose browse and install it in c:\wamp\bin\Perl\. click next, and keep all the following defaults, and finally install it. It will take some time to install depending on your computer.
+And finally once installed, uncheck, Display the release notes, and click finish.
+
+I chose the installation directory c:\wamp\bin\Perl\, to keep consistency for all apache related applications.
+
+Step 3:
+
+Verify the installer actually wrote the PATH variable in your system. This will save you a lot of headaches. Right click on “My Computer”, select properties, select Advanced Properties, click on Environmental Variables and under System variables scroll down and double click on PATH and verify c:\wamp\bin\Perl\site\bin; is in the Variable value.
+
+Or simply open a command prompt, start> run> cmd> and type:
+prompt>perl -v
+
+It should spit out the version of the perl your running.
+
+Step 4:
+
+Configure httpd.conf on WAMP server (WampServer) for perl. Open C:\wamp\bin\apache\Apache2.2.11\conf\httpd.conf, file which is your apache configuration file.
+Look for, Directory “c:/wamp/www/”, and under this line look for and replace:
+Options Indexes FollowSymLinks
+
+with:
+Options Indexes FollowSymLinks Includes ExecCGI
+
+This will activate Perl for your WAMP server (WampServer), so you can run Perl scripts.
+Look for and replace:
+#AddHandler cgi-script .cgi
+
+with:
+AddHandler cgi-script .cgi
+AddHandler cgi-script .pl
+
+This will activate the AddHandler for cgi and pl. These are common, so enable them.
+Look for and replace:
+DirectoryIndex index.php index.php3 index.html index.htm
+
+with:
+DirectoryIndex index.php index.php3 index.html index.htm index.cgi index.pl
+
+Apache executes these in the respective order; if it doesn’t find index.php it will look for index.php3 than index.html and so on. 
+
+Step 5:
+
+Restart WAMP server (WampServer) apache service. Wampserver > Apache > Service > Restart Service. Your server is ready to run, Perl. You can test by downloading this file and placing into one of your development site, c:/wamp/www/dev-site.com/perl-stuff, and executing it via browser, i.e. http://dev-site.com/perl-stuff.
